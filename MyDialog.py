@@ -115,10 +115,10 @@ class Ui_Dialog(object):
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
-        self.pushButton.setText(_translate("Dialog", "上传NIFTI图像"))
+        self.pushButton.setText(_translate("Dialog", "上传待分割图像"))
         self.groupBox.setTitle(_translate("Dialog", ""))
         self.pushButton_2.setText(_translate("Dialog", "上传掩模图像"))
-        self.radioButton.setText(_translate("Dialog", "NIFTI图像"))
+        self.radioButton.setText(_translate("Dialog", "待分割图像"))
         self.radioButton_2.setText(_translate("Dialog", "掩模图像"))
         self.radioButton_3.setText(_translate("Dialog", "指针"))
         self.radioButton_4.setText(_translate("Dialog", "画笔"))
@@ -203,18 +203,21 @@ class Ui_Dialog(object):
 
 
     def bindButton2(self):
-        global slice_idx
-        file_name = QFileDialog.getOpenFileName(None, "Open File", "./", "nii(*.nii.gz;*.nii)")
-        self.mask_path = file_name[0]
-        if self.mask_path == '':
-            QMessageBox.information(self, '提示', '请上传NIFTI格式图片', QMessageBox.Ok)
+        if self.nii_path == '':
+            QMessageBox.information(self, '提示', '请先上传待分割图片', QMessageBox.Ok)
         else:
-            #将mask图像显示在屏幕上
-            self.radioButton_2.setChecked(True)
-            self.check=1    #选中第二个单选框
-            slice_idx = self.horizontalSlider.value()
-            self.showimage(slice_idx)
-            set_global_b(True)
+            global slice_idx
+            file_name = QFileDialog.getOpenFileName(None, "Open File", "./", "nii(*.nii.gz;*.nii)")
+            self.mask_path = file_name[0]
+            if self.mask_path == '':
+                QMessageBox.information(self, '提示', '请上传NIFTI格式图片', QMessageBox.Ok)
+            else:
+                #将mask图像显示在屏幕上
+                self.radioButton_2.setChecked(True)
+                self.check=1    #选中第二个单选框
+                slice_idx = self.horizontalSlider.value()
+                self.showimage(slice_idx)
+                set_global_b(True)
 
     def show_dialog_1(self):
         if global_a == False:
