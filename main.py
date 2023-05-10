@@ -39,6 +39,8 @@ class MainDialogImgBW(QDialog, Ui_Dialog):
         self.check = 0
         # 创建用于记录是否选中画笔，选择画笔为1，未选中为0
         self.draw = 0
+        # 创建用于记录mask图像是否被修改,0为未修改，1为修改
+        self.edit = 0
 
         # 定义MyFigure类的一个实例
         self.F = MyFigure(width=3, height=3, dpi=100)

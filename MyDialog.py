@@ -71,6 +71,11 @@ class Ui_Dialog(object):
         self.pushButton_2.setGeometry(QtCore.QRect(60, 90, 120, 35))
         self.pushButton_2.setObjectName("pushButton_2")
 
+        self.pushButton_3 = QtWidgets.QPushButton(Dialog)
+        self.pushButton_3.setStyleSheet(qss)
+        self.pushButton_3.setGeometry(QtCore.QRect(60, 296, 120, 35))
+        self.pushButton_3.setObjectName("pushButton_3")
+
         #单选框分组
         self.buttonGroup1 = QButtonGroup()
         self.buttonGroup2 = QButtonGroup()
@@ -121,6 +126,7 @@ class Ui_Dialog(object):
         self.radioButton_2.setText(_translate("Dialog", "掩模图像"))
         self.radioButton_3.setText(_translate("Dialog", "指针"))
         self.radioButton_4.setText(_translate("Dialog", "画笔"))
+        self.pushButton_3.setText(_translate("Dialog", "保存修改后的图像"))
 
     def Myui(self):
         self.pushButton.clicked.connect(self.bindButton)
@@ -129,6 +135,7 @@ class Ui_Dialog(object):
         self.radioButton_2.clicked.connect(self.show_dialog_2)
         self.radioButton_3.clicked.connect(self.show_dialog_34)
         self.radioButton_4.clicked.connect(self.show_dialog_34)
+        self.pushButton_3.clicked.connect(self.bindButton3)
 
     def showimage(self, slice_idx):  # 获取对应索引的图片，并将其绘制在figure画布上
         data_nii = nib.load(Path(self.nii_path))
@@ -199,6 +206,7 @@ class Ui_Dialog(object):
             self.horizontalSlider.valueChanged.connect(self.bindSlider)
             #用户按下上传图像按钮并上传正确格式图像，图像就会被MSCAM中的方法处理 TODO：需要图像处理则将下面这行注释取消
             #MSCAM(self.nii_path)
+            #QMessageBox.information(self, '提示', '掩模图像已生成', QMessageBox.Ok)
 
 
     def bindButton2(self):
@@ -218,6 +226,17 @@ class Ui_Dialog(object):
                 self.showimage(slice_idx)
                 set_global_b(True)
 
+    def bindButton3(self):
+        if self.edit == 0:
+            QMessageBox.information(self, '提示', '掩模图像没有修改', QMessageBox.Ok)
+        else:
+            data_mask = nib.load(Path(self.mask_path))
+            data2 = data_mask.get_fdata()
+            # 保存修改后的mask文件,文件名为xxx_mask.nii，存储位置为原文件同文件夹下
+            output_path = self.mask_path.replace(".nii", "_edited.nii")
+            edit_mask = nib.Nifti1Image(data2, affine=data_mask.affine)
+            nib.save(edit_mask, output_path)
+            QMessageBox.information(self, '提示', '保存图像成功', QMessageBox.Ok)
     def show_dialog_1(self):
         if global_a == False:
             QMessageBox.information(self, '提示', '请上传NIFTI格式图片', QMessageBox.Ok)
@@ -262,8 +281,7 @@ class Ui_Dialog(object):
         # 获取当前坐标
         pos = event.pos()
         x, y = pos.x(), pos.y()
-        print(f"pos: {pos}")
-
+        #print(f"pos: {pos}")
         if self.mask_path != '':
             data_mask = nib.load(Path(self.mask_path))
             data2 = data_mask.get_fdata()
@@ -278,3 +296,9 @@ class Ui_Dialog(object):
                 print(f"Relative point: x={relative_x},y={relative_y}")
                 mask_value = data2[relative_y, relative_x, slice_idx]
                 print(mask_value)
+            #鼠标修改mask图像勾画区
+            if self.draw == 1:
+                array1 = list(data2[:, :, slice_idx - 1])
+                array1[relative_x][relative_y]=1
+                self.edit = 1
+                print(f"edit the mask image at x={relative_x},y={relative_y}")
