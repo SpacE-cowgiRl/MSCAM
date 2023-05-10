@@ -15,7 +15,6 @@ from PyQt5.QtGui import QPixmap, QMouseEvent, QPalette
 from pathlib import Path
 import nibabel as nib
 from PyQt5.QtWidgets import QFileDialog
-from Edit import on_mousePressEvent
 from MSCAM import MSCAM     #添加提取方法
 
 # 定义全局变量，用于记录NIFTI图像和掩模图像加载情况
@@ -256,8 +255,6 @@ class Ui_Dialog(object):
                 value = self.horizontalSlider.value()
                 #TODO   将连接mask图像方法写在这里，并在后面写一个用户画曲线的方法（要print曲线覆盖所有的像素点坐标，输出一下其中一些坐标的勾画值，看是否是连接到了data2)
                 # 试图将鼠标点击动作与mask图像进行连接
-
-
 
     def on_mousePressEvent(self, event: QMouseEvent):
         # mask_data = nib.load(Path(self.mask_path)).get_fdata()
