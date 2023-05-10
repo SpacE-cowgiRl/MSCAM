@@ -10,10 +10,6 @@ import sys
 from MyDialog import Ui_Dialog  # 导入GUI文件
 from MyFigure import *  # 嵌入了matplotlib的文件
 
-from pathlib import Path
-import nibabel as nib
-import numpy as np
-
 class MainDialogImgBW(QDialog, Ui_Dialog):
     def __init__(self):
         super(MainDialogImgBW, self).__init__()
@@ -49,27 +45,6 @@ class MainDialogImgBW(QDialog, Ui_Dialog):
         # 在GUI的groupBox中创建一个布局，用于添加MyFigure类的实例（即图形）后其他部件。
         self.gridlayout = QGridLayout(self.groupBox)  # 继承容器groupBox
         self.gridlayout.addWidget(self.F, 0, 1)
-        #here5
-        # if self.mask_path != '':
-        #     self.mask_data = nib.load(Path(self.mask_path)).get_fdata()
-        #     # 获取mask图像的尺寸
-        #     self.mask_shape = self.mask_data.shape
-        #     #将图像与绘图方法连接起来
-        #     self.mask_data.mousePressEvent = self.on_mousePressEvent
-
-    #here9
-    # def on_mousePressEvent(self, event: QMouseEvent):
-    #     # 获取当前坐标
-    #     pos = event.pos()
-    #     x, y = pos.x(), pos.y()
-    #     print(f"pos: {pos}")
-    #     mask_value = self.mask_data[y, x, 1]
-    #     print(mask_value)
-    #     #test
-    #     # for x in range(1,256):
-    #     #     for y in range(1,256):
-    #     #         if self.data[y, x, 1]==1:
-    #     #             print(y,x)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
